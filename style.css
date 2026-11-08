@@ -1,7 +1,6 @@
 body {
   margin: 0;
   height: 100vh;
-  gap: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -11,6 +10,7 @@ body {
   background-color: blue;
   font-size: 3vh;
   font-family: sans-serif;
+  margin: 5px;
   padding: 0.4vh 1vh;
   border-radius: 1vh;
 }
@@ -20,6 +20,7 @@ body {
   background-color: gray;
   font-size: 2vh;
   font-family: sans-serif;
+  margin: 5px;
   padding: 0.2vh 1vh;
   border-radius: 0.5vh;
 }
