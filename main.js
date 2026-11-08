@@ -1,8 +1,3 @@
-const gameParameters = {
-  maxQuestionNumber: 5,
-  initialRemainingTime: 60,
-};
-
 const gameStatus = {
   currentScene: "init",
   isGameStart: false,
@@ -32,7 +27,7 @@ const buttons = [
     width: 200,
     height: 60,
     text: "始める",
-    scene: "init",
+    scene: "ready",
     onClick: () => {
       gameStatus.isGameStart = true;
     },
@@ -44,7 +39,7 @@ const buttons = [
     width: 200,
     height: 60,
     text: "リトライ",
-    scene: "init",
+    scene: "ready",
     onClick: () => {
       console.log("Retry button clicked");
     },
@@ -72,7 +67,8 @@ const init = () => {
   mainContainer.element.style.userSelect = "none";
   mainContainer.element.style.webkitUserSelect = "none";
 
-  canvas.element = document.getElementById("game-canvas");
+  canvas.element = document.createElement("canvas");
+  mainContainer.element.appendChild(canvas.element);
   canvas.context = canvas.element.getContext("2d");
   canvas.element.width = canvas.width;
   canvas.element.height = canvas.height;
@@ -80,7 +76,6 @@ const init = () => {
   canvas.context.fillStyle = "black";
   canvas.context.fillRect(0, 0, canvas.width, canvas.height);
 
-  drawButtons();
   canvas.element.addEventListener("pointermove", handlePointerMove);
   canvas.element.addEventListener("pointerdown", handlePointerDown);
   resizeCanvas();
@@ -100,15 +95,15 @@ const resizeCanvas = () => {
   canvas.context.fillStyle = "white";
   canvas.context.font = "20px sans-serif";
 
-  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 100, 90);
+  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 120, 90);
 
   canvas.context.fillText(
     `style:${canvas.element.style.width} x ${canvas.element.style.height}`,
-    100,
+    120,
     150,
   );
 
-  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 100, 120);
+  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 120, 120);
 };
 
 window.addEventListener("resize", resizeCanvas);
@@ -122,6 +117,7 @@ const scenes = {
     gameStatus.currentScene = "ready";
   },
   ready: () => {
+    drawButtons();
     if (gameStatus.isGameStart) {
       gameStatus.startTime = performance.now();
       gameStatus.currentScene = "gamePlay";
@@ -179,9 +175,11 @@ const drawButton = (button) => {
 };
 
 const drawButtons = () => {
-  buttons
-    .filter((button) => button.scene === gameStatus.currentScene)
-    .forEach(drawButton);
+  const currentButtons = buttons.filter(
+    (button) => button.scene === gameStatus.currentScene,
+  );
+
+  currentButtons.forEach((button) => drawButton(button));
 };
 
 const isInsideButton = (button, x, y) => {
@@ -199,7 +197,12 @@ const handlePointerMove = (e) => {
   const scaleY = canvas.height / rect.height;
   const x = (e.clientX - rect.left) * scaleX;
   const y = (e.clientY - rect.top) * scaleY;
-  const hoveredButton = buttons.find((button) => isInsideButton(button, x, y));
+  const currentButtons = buttons.filter(
+    (button) => button.scene === gameStatus.currentScene,
+  );
+  const hoveredButton = currentButtons.find((button) =>
+    isInsideButton(button, x, y),
+  );
   canvas.element.style.cursor = hoveredButton ? "pointer" : "default";
 };
 
@@ -209,7 +212,12 @@ const handlePointerDown = (e) => {
   const scaleY = canvas.height / rect.height;
   const x = (e.clientX - rect.left) * scaleX;
   const y = (e.clientY - rect.top) * scaleY;
-  const clickedButton = buttons.find((button) => isInsideButton(button, x, y));
+  const currentButtons = buttons.filter(
+    (button) => button.scene === gameStatus.currentScene,
+  );
+  const clickedButton = currentButtons.find((button) =>
+    isInsideButton(button, x, y),
+  );
   if (clickedButton) {
     clickedButton.onClick();
   }
