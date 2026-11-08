@@ -37,6 +37,18 @@ const buttons = [
       gameStatus.isGameStart = true;
     },
   },
+  {
+    id: "retry",
+    x: 100,
+    y: 460,
+    width: 200,
+    height: 60,
+    text: "リトライ",
+    scene: "init",
+    onClick: () => {
+      console.log("Retry button clicked");
+    },
+  },
 ];
 
 window.onload = () => {
