@@ -62,6 +62,7 @@ const init = () => {
   canvas.context.fillRect(0, 0, canvas.width, canvas.height);
 
   drawStartButton();
+  canvas.element.addEventListener("pointermove", handlePointerMove);
   canvas.element.addEventListener("pointerdown", handlePointerDown);
   resizeCanvas();
 };
@@ -177,6 +178,21 @@ const isInsideStartButton = (x, y) => {
     y >= startButton.y &&
     y <= startButton.y + startButton.height
   );
+};
+
+const handlePointerMove = (e) => {
+  const rect = canvas.element.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+  const isHovering =
+    x >= startButton.x &&
+    x <= startButton.x + startButton.width &&
+    y >= startButton.y &&
+    y <= startButton.y + startButton.height;
+
+  canvas.element.style.cursor = isHovering ? "pointer" : "default";
 };
 
 const handlePointerDown = (e) => {
