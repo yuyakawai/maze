@@ -24,6 +24,14 @@ const canvas = {
   height: 700,
 };
 
+const startButton = {
+  x: 100,
+  y: 300,
+  width: 200,
+  height: 60,
+  text: "始める",
+};
+
 window.onload = () => {
   tick();
 };
@@ -50,9 +58,11 @@ const init = () => {
   canvas.element.width = canvas.width;
   canvas.element.height = canvas.height;
 
-  canvas.context.fillStyle = "red";
+  canvas.context.fillStyle = "black";
   canvas.context.fillRect(0, 0, canvas.width, canvas.height);
 
+  drawStartButton();
+  canvas.element.addEventListener("pointerdown", handlePointerDown);
   resizeCanvas();
 };
 
@@ -70,18 +80,15 @@ const resizeCanvas = () => {
   canvas.context.fillStyle = "white";
   canvas.context.font = "20px sans-serif";
 
-  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 10, 30);
+  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 100, 90);
 
   canvas.context.fillText(
     `style:${canvas.element.style.width} x ${canvas.element.style.height}`,
-    10,
-    60,
+    100,
+    150,
   );
 
-  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 10, 90);
-
-  console.log(window.innerWidth, window.innerHeight);
-  console.log(canvas.element.style.width, canvas.element.style.height);
+  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 100, 120);
 };
 
 window.addEventListener("resize", resizeCanvas);
@@ -129,4 +136,57 @@ const showGameOverMessage = () => {
 
 const showRetryMessage = () => {
   // empty
+};
+
+const drawStartButton = () => {
+  canvas.context.fillStyle = "#deb887";
+
+  canvas.context.fillRect(
+    startButton.x,
+    startButton.y,
+    startButton.width,
+    startButton.height,
+  );
+
+  canvas.context.strokeStyle = "#b99679";
+  canvas.context.lineWidth = 2;
+
+  canvas.context.strokeRect(
+    startButton.x,
+    startButton.y,
+    startButton.width,
+    startButton.height,
+  );
+
+  canvas.context.fillStyle = "black";
+  canvas.context.font = "24px sans-serif";
+  canvas.context.textAlign = "center";
+  canvas.context.textBaseline = "middle";
+
+  canvas.context.fillText(
+    startButton.text,
+    startButton.x + startButton.width / 2,
+    startButton.y + startButton.height / 2,
+  );
+};
+
+const isInsideStartButton = (x, y) => {
+  return (
+    x >= startButton.x &&
+    x <= startButton.x + startButton.width &&
+    y >= startButton.y &&
+    y <= startButton.y + startButton.height
+  );
+};
+
+const handlePointerDown = (e) => {
+  const rect = canvas.element.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+
+  if (isInsideStartButton(x, y)) {
+    canvas.context.fillText("handlePointerDown: OK", 40, 300);
+  }
 };
