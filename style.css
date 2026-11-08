@@ -1,3 +1,11 @@
+body {
+  margin: 0;
+  height: 100vh;
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
 .headline {
   color: white;
   background-color: blue;

@@ -20,8 +20,8 @@ const mainContainer = {
 const canvas = {
   element: null,
   context: null,
-  width: 300,
-  height: 400,
+  width: 400,
+  height: 700,
 };
 
 window.onload = () => {
@@ -38,6 +38,7 @@ const init = () => {
   mainContainer.element.style.width = "100vw";
   mainContainer.element.style.height = "100vh";
   mainContainer.element.style.display = "flex";
+  mainContainer.element.style.flex = "1";
   mainContainer.element.style.justifyContent = "center";
   mainContainer.element.style.alignItems = "center";
   mainContainer.element.style.overflow = "hidden";
