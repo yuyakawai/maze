@@ -88,22 +88,6 @@ const resizeCanvas = () => {
   );
   canvas.element.style.width = canvas.width * scale + "px";
   canvas.element.style.height = canvas.height * scale + "px";
-
-  canvas.context.fillStyle = "white";
-  canvas.context.font = "20px sans-serif";
-
-  canvas.context.fillStyle = "white";
-  canvas.context.font = "20px sans-serif";
-
-  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 120, 90);
-
-  canvas.context.fillText(
-    `style:${canvas.element.style.width} x ${canvas.element.style.height}`,
-    120,
-    150,
-  );
-
-  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 120, 120);
 };
 
 window.addEventListener("resize", resizeCanvas);
@@ -153,6 +137,19 @@ const showGameOverMessage = () => {
 
 const showRetryMessage = () => {
   // empty
+};
+
+const drawDebugInfo = () => {
+  canvas.context.fillStyle = "white";
+  canvas.context.font = "20px sans-serif";
+
+  canvas.context.fillText(`canvas:${canvas.width}x${canvas.height}`, 120, 90);
+  canvas.context.fillText(
+    `style:${canvas.element.style.width} x ${canvas.element.style.height}`,
+    120,
+    150,
+  );
+  canvas.context.fillText(`scale:${scale.toFixed(2)}`, 120, 120);
 };
 
 const drawButton = (button) => {
