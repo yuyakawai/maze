@@ -24,13 +24,20 @@ const canvas = {
   height: 700,
 };
 
-const startButton = {
-  x: 100,
-  y: 300,
-  width: 200,
-  height: 60,
-  text: "始める",
-};
+const buttons = [
+  {
+    id: "start",
+    x: 100,
+    y: 300,
+    width: 200,
+    height: 60,
+    text: "始める",
+    scene: "init",
+    onClick: () => {
+      gameStatus.isGameStart = true;
+    },
+  },
+];
 
 window.onload = () => {
   tick();
@@ -61,7 +68,7 @@ const init = () => {
   canvas.context.fillStyle = "black";
   canvas.context.fillRect(0, 0, canvas.width, canvas.height);
 
-  drawStartButton();
+  drawButtons();
   canvas.element.addEventListener("pointermove", handlePointerMove);
   canvas.element.addEventListener("pointerdown", handlePointerDown);
   resizeCanvas();
@@ -109,7 +116,8 @@ const scenes = {
     }
   },
   gamePlay: () => {
-    canvas.context.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.context.fillStyle = "red";
+    canvas.context.fillRect(0, 0, canvas.width, canvas.height);
   },
   gameOver: () => {
     showGameOverMessage();
@@ -139,25 +147,12 @@ const showRetryMessage = () => {
   // empty
 };
 
-const drawStartButton = () => {
+const drawButton = (button) => {
   canvas.context.fillStyle = "#deb887";
-
-  canvas.context.fillRect(
-    startButton.x,
-    startButton.y,
-    startButton.width,
-    startButton.height,
-  );
-
+  canvas.context.fillRect(button.x, button.y, button.width, button.height);
   canvas.context.strokeStyle = "#b99679";
   canvas.context.lineWidth = 2;
-
-  canvas.context.strokeRect(
-    startButton.x,
-    startButton.y,
-    startButton.width,
-    startButton.height,
-  );
+  canvas.context.strokeRect(button.x, button.y, button.width, button.height);
 
   canvas.context.fillStyle = "black";
   canvas.context.font = "24px sans-serif";
@@ -165,18 +160,24 @@ const drawStartButton = () => {
   canvas.context.textBaseline = "middle";
 
   canvas.context.fillText(
-    startButton.text,
-    startButton.x + startButton.width / 2,
-    startButton.y + startButton.height / 2,
+    button.text,
+    button.x + button.width / 2,
+    button.y + button.height / 2,
   );
 };
 
-const isInsideStartButton = (x, y) => {
+const drawButtons = () => {
+  buttons
+    .filter((button) => button.scene === gameStatus.currentScene)
+    .forEach(drawButton);
+};
+
+const isInsideButton = (button, x, y) => {
   return (
-    x >= startButton.x &&
-    x <= startButton.x + startButton.width &&
-    y >= startButton.y &&
-    y <= startButton.y + startButton.height
+    x >= button.x &&
+    x <= button.x + button.width &&
+    y >= button.y &&
+    y <= button.y + button.height
   );
 };
 
@@ -186,13 +187,8 @@ const handlePointerMove = (e) => {
   const scaleY = canvas.height / rect.height;
   const x = (e.clientX - rect.left) * scaleX;
   const y = (e.clientY - rect.top) * scaleY;
-  const isHovering =
-    x >= startButton.x &&
-    x <= startButton.x + startButton.width &&
-    y >= startButton.y &&
-    y <= startButton.y + startButton.height;
-
-  canvas.element.style.cursor = isHovering ? "pointer" : "default";
+  const hoveredButton = buttons.find((button) => isInsideButton(button, x, y));
+  canvas.element.style.cursor = hoveredButton ? "pointer" : "default";
 };
 
 const handlePointerDown = (e) => {
@@ -201,8 +197,8 @@ const handlePointerDown = (e) => {
   const scaleY = canvas.height / rect.height;
   const x = (e.clientX - rect.left) * scaleX;
   const y = (e.clientY - rect.top) * scaleY;
-
-  if (isInsideStartButton(x, y)) {
-    canvas.context.fillText("handlePointerDown: OK", 40, 300);
+  const clickedButton = buttons.find((button) => isInsideButton(button, x, y));
+  if (clickedButton) {
+    clickedButton.onClick();
   }
 };
